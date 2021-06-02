@@ -1,0 +1,20 @@
+{
+  "Records": [
+    {
+      "messageId": "19dd0b57-b21e-4ac1-bd88-01bbb068cb78",
+      "receiptHandle": "MessageReceiptHandle",
+      "body": "{\"email\":\"test@example.com\",\"photos\":[\"uek-krakow/eu-central-1:bbcc3843-2665-48ad-8de0-39d7c9e579f2/images/3b6d5364-1736-4f6f-b8f5-423458bfc8b5/89630779_3295168897164066_3215060561842667520_o.jpg\",\"uek-krakow/eu-central-1:bbcc3843-2665-48ad-8de0-39d7c9e579f2/images/fdcb49cb-0ca5-462b-a1a3-2cf802fe8f87/141004326_4204691606211786_8522896869501277661_n.jpg\"],\"request_id\":\"123qwerty\"}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1523232000000",
+        "SenderId": "123456789012",
+        "ApproximateFirstReceiveTimestamp": "1523232000001"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "{{{md5_of_body}}}",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:eu-central-1:123456789012:MyQueue",
+      "awsRegion": "eu-central-1"
+    }
+  ]
+}
