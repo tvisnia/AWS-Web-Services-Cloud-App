@@ -1,0 +1,8 @@
+export const awsConfig = {
+    userPoolId: '{Your user pool id}',
+    clientId: '{Your clientId}',
+    identityPoolId: '{Your identityPoolId}',
+    region: '{Your default region}',
+    bucketName: '{Your bucket name}',
+    credentialsLoginKey: '{Credentials logins keys}'
+}

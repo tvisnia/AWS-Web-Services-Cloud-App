@@ -1,0 +1,27 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack --mode production && echo 'we are ready to deploy'",
+    "release": "aws s3 sync ./dist/ s3://${APP_BUCKET}/ --acl=public-read",
+    "deploy": "npm run build && npm run release"
+  },
+  "author": "Tomasz Wiśniewski",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^5.2.6",
+    "style-loader": "^2.0.0",
+    "webpack": "^4.0",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^4.5.13",
+    "aws-sdk": "^2.870.0",
+    "mini.css": "^3.0.1",
+    "uuid": "^8.3.2"
+  }
+}
