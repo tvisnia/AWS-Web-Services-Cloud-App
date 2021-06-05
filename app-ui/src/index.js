@@ -1,8 +1,5 @@
-import { S3 } from 'aws-sdk';
-import { v4 as uuid } from 'uuid'
 import css from './styles/main.css'
 import miniCss from "mini.css/dist/mini-nord.css"
-
 import {
     getCurrentUser,
     login,
@@ -12,13 +9,14 @@ import {
     loadLocalStorageCredentials,
     getAccessToken
 } from './account/AccountService';
-import { listFiles } from './s3/AwsFilesService';
+import { listFiles, uploadToS3, getPresigendUrl } from './s3/AwsFilesService';
 import { hello } from './commons/greet'
 import {
     ConfirmAccountRequestPauload,
     LoginRequestPayload,
     RegisterRequestPayload
 } from './account/commons/Const';
+import { addToUploadedPreview, clearUploadArea } from './htmlHelper/HtmlHelper'
 import { awsConfig } from './aws_exports';
 
 
@@ -26,77 +24,20 @@ AWS.config.region = awsConfig.region
 
 const BTN_CLASS = 'button'
 
+let photos = []
+
 getCurrentUser()
     .then(profile => hello(`${profile.email}, nice website: ${profile.website}`))
     .catch(_ => hello('Guest'))
 loadLocalStorageCredentials()
     .then(session => refreshAwsCredentials(session))
-    .catch(err => console.error('Cannot reload credentials.'))
+    .catch(err => console.error(`Cannot reload credentials: ${err}`))
 
-let photos = []
-
-const uploadToS3 = (userId, file, onProgress) => {
-    return new Promise((resolve, reject) => {
-        const destKey = `uek-krakow/${userId}/images/${uuid()}/${file.name}`;
-        const params = {
-            Body: file,
-            Bucket: awsConfig.bucketName,
-            Key: destKey,
-        }
-
-        const s3 = new S3();
-
-        s3.putObject(params, (err, data) => {
-            if (err) {
-                reject(err);
-            }
-
-            resolve(destKey);
-        }).on('httpUploadProgress', (progress) => {
-            const currentProgress = Math.round((progress.loaded / progress.total) * 100);
-            onProgress(currentProgress);
-            console.log(`current progres is: ${currentProgress}%`);
-        })
-    });
-}
-
-const getPresigendUrl = (key) => {
-    const params = {
-        Bucket: awsConfig.bucketName,
-        Key: key
-    }
-
-    const s3 = new S3();
-
-    return s3.getSignedUrl('getObject', params);
-}
 
 const addToOrder = (key) => {
     photos.push(key)
     console.log(`current photo list: ${photos}`)
     return key
-}
-
-const createElementFromString = (template) => {
-    const parent = document.createElement('div');
-    parent.innerHTML = template.trim();
-    return parent.firstChild;
-}
-
-const addToUploadedPreview = (url) => {
-    const itemTemplate = `
-    <li>
-        <img src="${url}" width="200"/>
-    </li>`;
-    const el = createElementFromString(itemTemplate);
-    const uploadedList = document.querySelector('.uploadedPreview');
-    uploadedList.appendChild(el);
-}
-
-const clearUploadArea = (filesInput, progressBarEl) => {
-    progressBarEl.style.width = `0%`;
-    progressBarEl.textContent = `0%`;
-    filesInput.value = '';
 }
 
 const orderAnimation = (token, orderRequest) => {
@@ -126,7 +67,7 @@ const loginBtn = document.querySelector(`${BTN_CLASS}.login`)
 loginBtn.addEventListener('click', () => {
     login(LoginRequestPayload)
         .then(result => refreshAwsCredentials(result))
-        .then(result => console.log(`Succesfully logged in ! ${JSON.stringify(result)}`))
+        .then(result => console.log(`Succesfully logged in !`))
         .catch(err => console.error(err))
 })
 
